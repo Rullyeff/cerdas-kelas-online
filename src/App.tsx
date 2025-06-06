@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,10 @@ import Schedule from "./pages/Schedule";
 import Messages from "./pages/Messages";
 import Library from "./pages/Library";
 import NotFound from "./pages/NotFound";
+import Students from "./pages/Students";
+import Users from "./pages/Users";
+import Teachers from "./pages/Teachers";
+import Reports from "./pages/Reports";
 
 const queryClient = new QueryClient();
 
@@ -75,34 +78,22 @@ const App = () => (
             } />
             <Route path="/students" element={
               <ProtectedRoute requiredRole="teacher">
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Manajemen Siswa</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Students />
               </ProtectedRoute>
             } />
             <Route path="/users" element={
               <ProtectedRoute requiredRole="admin">
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Manajemen User</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Users />
               </ProtectedRoute>
             } />
             <Route path="/teachers" element={
               <ProtectedRoute requiredRole="admin">
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Manajemen Guru</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Teachers />
               </ProtectedRoute>
             } />
             <Route path="/reports" element={
               <ProtectedRoute requiredRole="admin">
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Laporan Sistem</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Reports />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
