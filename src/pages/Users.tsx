@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Search, Filter, Plus, Mail, Shield, MoreHorizontal, UserPlus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Filter, Plus, Mail, Shield, MoreHorizontal, UserPlus, Eye, Edit, Trash2, Upload, Download, FileText } from 'lucide-react';
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -95,6 +94,24 @@ const Users = () => {
     return matchesSearch && matchesRole;
   });
 
+  const downloadTemplate = () => {
+    const template = [
+      ['Nama', 'Email', 'Role', 'Kelas/Mata Pelajaran'],
+      ['Contoh Siswa', 'siswa@example.com', 'student', 'XII IPA 1'],
+      ['Contoh Guru', 'guru@example.com', 'teacher', 'Matematika'],
+      ['Contoh Admin', 'admin@example.com', 'admin', '']
+    ];
+    
+    const csvContent = template.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'template_user.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -103,42 +120,71 @@ const Users = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Manajemen User</h1>
             <p className="text-gray-600">Kelola semua pengguna sistem dan kontrol akses</p>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <UserPlus className="h-4 w-4 mr-2" />
-                Tambah User
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>Tambah User Baru</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Nama Lengkap</Label>
-                  <Input id="name" placeholder="Masukkan nama lengkap" />
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={downloadTemplate}>
+              <Download className="h-4 w-4 mr-2" />
+              Template CSV
+            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Impor User
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Impor User dari CSV</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="csvFile">File CSV</Label>
+                    <Input id="csvFile" type="file" accept=".csv" />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Format: Nama, Email, Role, Kelas/Mata Pelajaran
+                    </p>
+                  </div>
+                  <Button className="w-full">Upload & Proses</Button>
                 </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="email@domain.com" />
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Tambah User
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Tambah User Baru</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Nama Lengkap</Label>
+                    <Input id="name" placeholder="Masukkan nama lengkap" />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="email@domain.com" />
+                  </div>
+                  <div>
+                    <Label htmlFor="role">Role</Label>
+                    <select id="role" className="w-full p-2 border rounded-md">
+                      <option value="student">Siswa</option>
+                      <option value="teacher">Guru</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="password">Password</Label>
+                    <Input id="password" type="password" placeholder="Password sementara" />
+                  </div>
+                  <Button className="w-full">Tambah User</Button>
                 </div>
-                <div>
-                  <Label htmlFor="role">Role</Label>
-                  <select id="role" className="w-full p-2 border rounded-md">
-                    <option value="student">Siswa</option>
-                    <option value="teacher">Guru</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" placeholder="Password sementara" />
-                </div>
-                <Button className="w-full">Tambah User</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Filter dan Search */}
@@ -260,6 +306,11 @@ const Users = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Footer Copyright */}
+      <div className="mt-12 pt-6 border-t text-center text-sm text-gray-500">
+        © 2024 Edukasi Anak Bangsa. Copyright by Ibrahim Rully Effendy
       </div>
     </DashboardLayout>
   );
