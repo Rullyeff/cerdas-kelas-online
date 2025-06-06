@@ -3,12 +3,18 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Classes from "./pages/Classes";
+import Assignments from "./pages/Assignments";
+import Exams from "./pages/Exams";
+import Grades from "./pages/Grades";
+import Schedule from "./pages/Schedule";
+import Messages from "./pages/Messages";
+import Library from "./pages/Library";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,64 +40,43 @@ const App = () => (
             } />
             <Route path="/assignments" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Tugas</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Assignments />
               </ProtectedRoute>
             } />
             <Route path="/exams" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Ujian</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Exams />
               </ProtectedRoute>
             } />
             <Route path="/grades" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Nilai</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Grades />
+              </ProtectedRoute>
+            } />
+            <Route path="/grading" element={
+              <ProtectedRoute requiredRole="teacher">
+                <Grades />
               </ProtectedRoute>
             } />
             <Route path="/schedule" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Jadwal</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Schedule />
               </ProtectedRoute>
             } />
             <Route path="/messages" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Pesan</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Messages />
               </ProtectedRoute>
             } />
             <Route path="/library" element={
               <ProtectedRoute>
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Perpustakaan Digital</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
+                <Library />
               </ProtectedRoute>
             } />
             <Route path="/students" element={
               <ProtectedRoute requiredRole="teacher">
                 <div className="p-8 text-center">
                   <h1 className="text-2xl font-bold mb-4">Manajemen Siswa</h1>
-                  <p>Fitur ini sedang dalam pengembangan</p>
-                </div>
-              </ProtectedRoute>
-            } />
-            <Route path="/grading" element={
-              <ProtectedRoute requiredRole="teacher">
-                <div className="p-8 text-center">
-                  <h1 className="text-2xl font-bold mb-4">Halaman Penilaian</h1>
                   <p>Fitur ini sedang dalam pengembangan</p>
                 </div>
               </ProtectedRoute>
