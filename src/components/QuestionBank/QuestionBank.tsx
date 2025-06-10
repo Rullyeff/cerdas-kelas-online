@@ -135,10 +135,8 @@ const QuestionBank = () => {
                       className="w-full p-2 border rounded-md"
                       value={newQuestion.type}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === 'multiple_choice' || value === 'essay') {
-                          setNewQuestion({...newQuestion, type: value});
-                        }
+                        const value = e.target.value as 'multiple_choice' | 'essay';
+                        setNewQuestion({...newQuestion, type: value});
                       }}
                     >
                       <option value="multiple_choice">Pilihan Ganda</option>
@@ -186,10 +184,8 @@ const QuestionBank = () => {
                     className="w-full p-2 border rounded-md"
                     value={newQuestion.difficulty}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === 'easy' || value === 'medium' || value === 'hard') {
-                        setNewQuestion({...newQuestion, difficulty: value});
-                      }
+                      const value = e.target.value as 'easy' | 'medium' | 'hard';
+                      setNewQuestion({...newQuestion, difficulty: value});
                     }}
                   >
                     <option value="easy">Mudah</option>
