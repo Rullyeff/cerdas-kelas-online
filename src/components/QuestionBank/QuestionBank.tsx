@@ -6,43 +6,32 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Search, Upload, Download, Edit, Trash2, FileText } from 'lucide-react';
+import { Plus, Search, Upload, Download, Edit, Trash2 } from 'lucide-react';
+import { useQuestionBank } from '@/contexts/QuestionBankContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const QuestionBank = () => {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: 'Berapa hasil dari 2 + 2?',
-      type: 'multiple_choice',
-      subject: 'Matematika',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: 1,
-      difficulty: 'easy'
-    },
-    {
-      id: 2,
-      question: 'Jelaskan hukum Newton yang pertama!',
-      type: 'essay',
-      subject: 'Fisika',
-      difficulty: 'medium'
-    }
-  ]);
+  const { questions, addQuestion, deleteQuestion } = useQuestionBank();
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [newQuestion, setNewQuestion] = useState({
     question: '',
-    type: 'multiple_choice',
+    type: 'multiple_choice' as const,
     subject: '',
     options: ['', '', '', ''],
     correctAnswer: 0,
-    difficulty: 'easy'
+    difficulty: 'easy' as const
   });
 
-  const addQuestion = () => {
-    const question = {
+  const handleAddQuestion = () => {
+    if (!newQuestion.question || !newQuestion.subject) return;
+    
+    addQuestion({
       ...newQuestion,
-      id: questions.length + 1
-    };
-    setQuestions([...questions, question]);
+      createdBy: user?.name
+    });
+    
     setNewQuestion({
       question: '',
       type: 'multiple_choice',
@@ -72,6 +61,11 @@ const QuestionBank = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const filteredQuestions = questions.filter(question => 
+    question.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    question.subject.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -134,7 +128,7 @@ const QuestionBank = () => {
                       id="questionType"
                       className="w-full p-2 border rounded-md"
                       value={newQuestion.type}
-                      onChange={(e) => setNewQuestion({...newQuestion, type: e.target.value})}
+                      onChange={(e) => setNewQuestion({...newQuestion, type: e.target.value as 'multiple_choice' | 'essay'})}
                     >
                       <option value="multiple_choice">Pilihan Ganda</option>
                       <option value="essay">Esai</option>
@@ -180,14 +174,14 @@ const QuestionBank = () => {
                     id="difficulty"
                     className="w-full p-2 border rounded-md"
                     value={newQuestion.difficulty}
-                    onChange={(e) => setNewQuestion({...newQuestion, difficulty: e.target.value})}
+                    onChange={(e) => setNewQuestion({...newQuestion, difficulty: e.target.value as 'easy' | 'medium' | 'hard'})}
                   >
                     <option value="easy">Mudah</option>
                     <option value="medium">Sedang</option>
                     <option value="hard">Sulit</option>
                   </select>
                 </div>
-                <Button onClick={addQuestion} className="w-full">Simpan Soal</Button>
+                <Button onClick={handleAddQuestion} className="w-full">Simpan Soal</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -197,12 +191,17 @@ const QuestionBank = () => {
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input placeholder="Cari soal..." className="pl-10" />
+        <Input 
+          placeholder="Cari soal..." 
+          className="pl-10" 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       {/* Questions List */}
       <div className="grid gap-4">
-        {questions.map((question) => (
+        {filteredQuestions.map((question) => (
           <Card key={question.id}>
             <CardHeader>
               <div className="flex justify-between items-start">
@@ -217,22 +216,29 @@ const QuestionBank = () => {
                     <Badge variant="secondary">
                       {question.type === 'multiple_choice' ? 'Pilihan Ganda' : 'Esai'}
                     </Badge>
+                    {question.createdBy && (
+                      <Badge variant="outline">Oleh: {question.createdBy}</Badge>
+                    )}
                   </div>
                 </div>
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm">
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => deleteQuestion(question.id)}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             </CardHeader>
-            {question.type === 'multiple_choice' && (
+            {question.type === 'multiple_choice' && question.options && (
               <CardContent>
                 <div className="grid grid-cols-2 gap-2">
-                  {question.options?.map((option, index) => (
+                  {question.options.map((option, index) => (
                     <div key={index} className={`p-2 rounded text-sm ${
                       question.correctAnswer === index ? 'bg-green-100 text-green-800' : 'bg-gray-50'
                     }`}>
