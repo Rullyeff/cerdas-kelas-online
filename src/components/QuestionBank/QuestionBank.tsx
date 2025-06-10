@@ -128,7 +128,12 @@ const QuestionBank = () => {
                       id="questionType"
                       className="w-full p-2 border rounded-md"
                       value={newQuestion.type}
-                      onChange={(e) => setNewQuestion({...newQuestion, type: e.target.value as 'multiple_choice' | 'essay'})}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === 'multiple_choice' || value === 'essay') {
+                          setNewQuestion({...newQuestion, type: value});
+                        }
+                      }}
                     >
                       <option value="multiple_choice">Pilihan Ganda</option>
                       <option value="essay">Esai</option>
@@ -174,7 +179,12 @@ const QuestionBank = () => {
                     id="difficulty"
                     className="w-full p-2 border rounded-md"
                     value={newQuestion.difficulty}
-                    onChange={(e) => setNewQuestion({...newQuestion, difficulty: e.target.value as 'easy' | 'medium' | 'hard'})}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === 'easy' || value === 'medium' || value === 'hard') {
+                        setNewQuestion({...newQuestion, difficulty: value});
+                      }
+                    }}
                   >
                     <option value="easy">Mudah</option>
                     <option value="medium">Sedang</option>
