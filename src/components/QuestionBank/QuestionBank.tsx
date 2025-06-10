@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,13 +14,20 @@ const QuestionBank = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [newQuestion, setNewQuestion] = useState({
+  const [newQuestion, setNewQuestion] = useState<{
+    question: string;
+    type: 'multiple_choice' | 'essay';
+    subject: string;
+    options: string[];
+    correctAnswer: number;
+    difficulty: 'easy' | 'medium' | 'hard';
+  }>({
     question: '',
-    type: 'multiple_choice' as const,
+    type: 'multiple_choice',
     subject: '',
     options: ['', '', '', ''],
     correctAnswer: 0,
-    difficulty: 'easy' as const
+    difficulty: 'easy'
   });
 
   const handleAddQuestion = () => {
