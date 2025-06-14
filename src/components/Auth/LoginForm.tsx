@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, UserCircle2 } from 'lucide-react';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,6 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
     const success = await login(email, password);
     if (!success) {
       setError('Email atau password tidak valid');
@@ -32,27 +31,26 @@ const LoginForm = () => {
   ];
 
   return (
-    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center text-white">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <GraduationCap className="h-12 w-12" />
-            <h1 className="text-4xl font-bold">EduSMA</h1>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-emerald-100 via-yellow-50 to-lime-100 p-4">
+      <div className="w-full max-w-md flex flex-col gap-7">
+        {/* Header - gradient text & ikon */}
+        <div className="flex flex-col items-center mb-0">
+          <div className="bg-gradient-to-br from-teal-400 via-yellow-300 to-green-300 p-2 rounded-full mb-3 shadow-lg">
+            <GraduationCap className="h-14 w-14 text-white drop-shadow-lg" />
           </div>
-          <p className="text-lg opacity-90">Platform E-Learning untuk Masa Depan</p>
+          <h1 className="text-4xl font-extrabold bg-gradient-to-br from-green-700 via-yellow-600 to-lime-600 bg-clip-text text-transparent mb-1 font-poppins">Selamat Datang!</h1>
+          <p className="text-sm text-emerald-800 mb-2 font-semibold">Portal Edukasi SMA · E-Learning</p>
         </div>
-
-        <Card className="glass-effect border-white/20">
+        {/* Card Form */}
+        <Card className="rounded-xl shadow-xl bg-white/80 border-emerald-200/40">
           <CardHeader>
-            <CardTitle className="text-center text-white">Masuk ke Akun</CardTitle>
-            <CardDescription className="text-center text-white/80">
-              Gunakan kredensial demo di bawah untuk mencoba platform
-            </CardDescription>
+            <CardTitle className="text-center text-2xl text-emerald-800 font-bold mb-1 tracking-wide">Login Akun</CardTitle>
+            <CardDescription className="text-center text-yellow-700 font-semibold">Akses fitur lengkap dengan login!</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
+                <Label htmlFor="email" className="text-emerald-900">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -60,12 +58,12 @@ const LoginForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Masukkan email"
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder-white/50"
+                  className="bg-emerald-50 border-yellow-200 focus:border-emerald-500 focus:ring-emerald-200 text-emerald-900 placeholder:text-emerald-400/70"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">Password</Label>
+                <Label htmlFor="password" className="text-emerald-900">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -74,13 +72,13 @@ const LoginForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Masukkan password"
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder-white/50 pr-10"
+                    className="bg-emerald-50 border-yellow-200 focus:border-emerald-500 focus:ring-emerald-200 text-emerald-900 placeholder:text-emerald-400/70 pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-yellow-600"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -89,43 +87,53 @@ const LoginForm = () => {
               </div>
 
               {error && (
-                <Alert className="bg-red-500/20 border-red-500/30">
-                  <AlertDescription className="text-white">{error}</AlertDescription>
+                <Alert className="bg-yellow-100 border-yellow-300">
+                  <AlertDescription className="text-red-700 font-semibold">
+                    {error}
+                  </AlertDescription>
                 </Alert>
               )}
 
               <Button
                 type="submit"
-                className="w-full bg-white text-gray-900 hover:bg-white/90"
+                className="w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-lime-400 text-white font-bold tracking-wide shadow-lg py-2 hover:from-emerald-600 hover:to-lime-500 hover:via-yellow-500 border-none"
                 disabled={isLoading}
               >
                 {isLoading ? 'Memproses...' : 'Masuk'}
               </Button>
             </form>
-
-            <div className="mt-6">
-              <h3 className="text-white font-medium mb-3">Akun Demo:</h3>
-              <div className="space-y-2">
+            {/* Demo Account Section */}
+            <div className="mt-7">
+              <h3 className="text-emerald-700 font-semibold text-sm mb-3">Akun Demo:</h3>
+              <div className="grid gap-3">
                 {demoAccounts.map((account) => (
                   <div
                     key={account.role}
-                    className="bg-white/10 p-3 rounded-lg cursor-pointer hover:bg-white/20 transition-colors"
+                    className="flex items-center bg-yellow-50 border border-yellow-200 hover:bg-yellow-100 transition rounded-lg py-2 px-3 cursor-pointer gap-3"
                     onClick={() => {
                       setEmail(account.email);
                       setPassword(account.password);
                     }}
                   >
-                    <div className="text-white font-medium">{account.role}</div>
-                    <div className="text-white/70 text-sm">{account.email}</div>
+                    <UserCircle2 className="h-6 w-6 text-emerald-600" />
+                    <div>
+                      <div className="font-medium text-emerald-900 text-sm">{account.role}</div>
+                      <div className="text-xs text-emerald-700">{account.email}</div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </CardContent>
         </Card>
+        {/* Footer */}
+        <div className="mt-6 text-center text-xs text-emerald-900/70 font-poppins tracking-wide">
+          © 2024 Edukasi Anak Bangsa. Inovasi untuk Pendidikan Indonesia.
+        </div>
       </div>
     </div>
   );
 };
 
 export default LoginForm;
+
