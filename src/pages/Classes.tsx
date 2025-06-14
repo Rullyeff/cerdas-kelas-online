@@ -311,20 +311,45 @@ const Classes = () => {
                   </div>
                 )}
 
-                <div className={`flex space-x-2 ${user?.role === 'teacher' ? 'justify-between' : ''}`}>
-                  <Button className="flex-1">
-                    <Video className="h-4 w-4 mr-2" />
-                    Gabung Kelas
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <BookOpen className="h-4 w-4" />
-                  </Button>
+                <div className="flex items-end justify-between mt-6">
+                  {/* Aksi utama (Gabung Kelas & Detail)—rata kiri */}
+                  <div className="flex flex-1 gap-2">
+                    <Button className="flex-1" variant="default">
+                      <Video className="h-4 w-4 mr-2" />
+                      Gabung Kelas
+                    </Button>
+                    <Button variant="outline" size="icon">
+                      <BookOpen className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {/* Aksi sekunder (Tambah Siswa, Edit, Delete)—rata kanan, vertical stack */}
                   {user?.role === 'teacher' && (
-                    <div className="flex items-center space-x-1">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenEdit(classItem)}>
+                    <div className="flex flex-col gap-2 ml-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleOpenAssign(classItem.id)}
+                        title="Tambah Siswa"
+                        className="border-green-500 hover:bg-green-100 hover:border-green-600"
+                      >
+                        <UserPlus className="h-4 w-4 text-green-600" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleOpenEdit(classItem)}
+                        title="Edit"
+                        className="border-gray-400 hover:bg-gray-100"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="destructive" size="icon" onClick={() => handleOpenDelete(classItem.id)}>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleOpenDelete(classItem.id)}
+                        title="Hapus"
+                        className="border-red-400 hover:bg-red-100"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
