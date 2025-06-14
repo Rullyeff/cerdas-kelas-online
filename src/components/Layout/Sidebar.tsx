@@ -3,7 +3,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   Home, MessageSquare, Library, BookOpen, Users, FileText, 
-  ClipboardCheck, BarChart3, Calendar, GraduationCap, UserCheck, Settings
+  ClipboardCheck, BarChart3, Calendar, UserCheck, Settings, 
+  GraduationCap
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,11 +23,11 @@ const Sidebar = () => {
         return [
           ...commonItems,
           { icon: BookOpen, label: 'Kelas Saya', path: '/classes' },
-          { icon: Users, label: 'Siswa', path: '/students' },
           { icon: FileText, label: 'Tugas', path: '/assignments' },
           { icon: ClipboardCheck, label: 'Ujian', path: '/exams' },
-          { icon: BarChart3, label: 'Penilaian', path: '/grades' },
+          { icon: BarChart3, label: 'Nilai Saya', path: '/grades' },
           { icon: Calendar, label: 'Jadwal', path: '/schedule' },
+          { icon: Settings, label: 'Pengaturan', path: '/settings' },
         ];
       case 'teacher':
         return [
@@ -37,17 +38,19 @@ const Sidebar = () => {
           { icon: ClipboardCheck, label: 'Ujian', path: '/exams' },
           { icon: BarChart3, label: 'Penilaian', path: '/grading' },
           { icon: Calendar, label: 'Jadwal', path: '/schedule' },
+          { icon: Settings, label: 'Pengaturan', path: '/settings' },
         ];
       case 'admin':
         return [
           ...commonItems,
-          { icon: BookOpen, label: 'Kelas Saya', path: '/classes' },
-          { icon: Users, label: 'Siswa', path: '/students' },
-          { icon: UserCheck, label: 'Guru', path: '/teachers' },
-          { icon: FileText, label: 'Tugas', path: '/assignments' },
-          { icon: ClipboardCheck, label: 'Ujian', path: '/exams' },
-          { icon: BarChart3, label: 'Penilaian', path: '/reports' },
+          { icon: BookOpen, label: 'Kelola Kelas', path: '/classes' },
+          { icon: Users, label: 'Kelola Siswa', path: '/students' },
+          { icon: UserCheck, label: 'Kelola Guru', path: '/teachers' },
+          { icon: FileText, label: 'Kelola Tugas', path: '/assignments' },
+          { icon: ClipboardCheck, label: 'Kelola Ujian', path: '/exams' },
+          { icon: BarChart3, label: 'Laporan', path: '/reports' },
           { icon: Calendar, label: 'Jadwal', path: '/schedule' },
+          { icon: GraduationCap, label: 'Pengguna', path: '/users' },
           { icon: Settings, label: 'Pengaturan', path: '/settings' },
         ];
       default:

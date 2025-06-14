@@ -21,6 +21,7 @@ import Students from "./pages/Students";
 import Users from "./pages/Users";
 import Teachers from "./pages/Teachers";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -45,7 +46,7 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/students" element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole={['teacher', 'admin']}>
                   <Students />
                 </ProtectedRoute>
               } />
@@ -100,11 +101,8 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/settings" element={
-                <ProtectedRoute requiredRole="admin">
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-4">Pengaturan</h1>
-                    <p>Fitur ini sedang dalam pengembangan</p>
-                  </div>
+                <ProtectedRoute>
+                  <Settings />
                 </ProtectedRoute>
               } />
               <Route path="*" element={<NotFound />} />
