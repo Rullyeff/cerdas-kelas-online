@@ -3,7 +3,7 @@ import DashboardLayout from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Users, Clock, BookOpen, Video, Edit, Trash2, Plus } from 'lucide-react';
+import { Users, Clock, BookOpen, Video, Edit, Trash2, Plus, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -84,6 +84,54 @@ const studentClasses = [
   }
 ];
 
+// Daftar siswa terdaftar admin (dummy, sama dengan Students)
+const availableStudents = [
+  {
+    id: 1,
+    name: 'Ahmad Rizky Pratama',
+    nis: '2024001',
+    class: 'XII IPA 1',
+    email: 'ahmad.rizky@student.com',
+    phone: '081234567890',
+    status: 'active',
+    average: 88.5,
+    attendance: 95
+  },
+  {
+    id: 2,
+    name: 'Siti Nurhaliza',
+    nis: '2024002',
+    class: 'XII IPA 1',
+    email: 'siti.nur@student.com',
+    phone: '081234567891',
+    status: 'active',
+    average: 92.3,
+    attendance: 98
+  },
+  {
+    id: 3,
+    name: 'Budi Santoso',
+    nis: '2024003',
+    class: 'XII IPA 2',
+    email: 'budi.santoso@student.com',
+    phone: '081234567892',
+    status: 'inactive',
+    average: 75.8,
+    attendance: 85
+  },
+  {
+    id: 4,
+    name: 'Maya Dewi',
+    nis: '2024004',
+    class: 'XI IPA 1',
+    email: 'maya.dewi@student.com',
+    phone: '081234567893',
+    status: 'active',
+    average: 89.7,
+    attendance: 92
+  }
+];
+
 const Classes = () => {
   const { user } = useAuth();
 
@@ -101,6 +149,13 @@ const Classes = () => {
     color: defaultClassColors[Math.floor(Math.random() * defaultClassColors.length)],
   });
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [classStudentMap, setClassStudentMap] = useState<{ [classId: number]: number[] }>({
+    1: [1, 2], // Default siswa per kelas
+    2: [3],
+    3: [4],
+  });
+  const [openAssignDialog, setOpenAssignDialog] = useState<{ open: boolean; classId: number | null }>({ open: false, classId: null });
+  const [selectedStudentId, setSelectedStudentId] = useState<number | "">("");
 
   const resetForm = () => {
     setFormData({
@@ -163,6 +218,24 @@ const Classes = () => {
   const handleDelete = () => {
     setTeacherClasses(prev => prev.filter(kelas => kelas.id !== deleteId));
     setDeleteId(null);
+  };
+
+  const handleOpenAssign = (classId: number) => {
+    setOpenAssignDialog({ open: true, classId });
+    setSelectedStudentId("");
+  };
+  const handleCloseAssign = () => setOpenAssignDialog({ open: false, classId: null });
+
+  const handleAssignStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    const classId = openAssignDialog.classId;
+    if (!classId || !selectedStudentId) return;
+    setClassStudentMap((prev) => {
+      const curr = prev[classId] || [];
+      if (curr.includes(Number(selectedStudentId))) return prev;
+      return { ...prev, [classId]: [...curr, Number(selectedStudentId)] };
+    });
+    handleCloseAssign();
   };
 
   const classes = user?.role === 'student' ? studentClasses : teacherClasses;
@@ -280,6 +353,40 @@ const Classes = () => {
             </div>
           </div>
         )}
+
+        {/* Dialog Assign Siswa per kelas */}
+        <Dialog open={openAssignDialog.open} onOpenChange={handleCloseAssign}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Tambah Siswa ke Kelas</DialogTitle>
+            </DialogHeader>
+            <form className="space-y-4" onSubmit={handleAssignStudent}>
+              <div>
+                <Label htmlFor="student">Pilih Siswa Terdaftar</Label>
+                <select
+                  id="student"
+                  value={selectedStudentId}
+                  onChange={e => setSelectedStudentId(Number(e.target.value))}
+                  className="w-full border rounded px-3 py-2 mt-1"
+                >
+                  <option value="">-- Pilih Siswa --</option>
+                  {availableStudents
+                    .filter(stu =>
+                      !classStudentMap[openAssignDialog.classId || 0]?.includes(stu.id)
+                    )
+                    .map((stu) => (
+                      <option key={stu.id} value={stu.id}>
+                        {stu.name} ({stu.nis})
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <Button className="w-full" type="submit" disabled={!selectedStudentId}>
+                Assign ke Kelas
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         {/* Dialog Tambah/Edit */}
         <Dialog open={openForm} onOpenChange={setOpenForm}>
