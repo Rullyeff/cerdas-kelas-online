@@ -44,6 +44,11 @@ const App = () => (
                   <Classes />
                 </ProtectedRoute>
               } />
+              <Route path="/students" element={
+                <ProtectedRoute>
+                  <Students />
+                </ProtectedRoute>
+              } />
               <Route path="/assignments" element={
                 <ProtectedRoute>
                   <Assignments />
@@ -79,11 +84,6 @@ const App = () => (
                   <Library />
                 </ProtectedRoute>
               } />
-              <Route path="/students" element={
-                <ProtectedRoute requiredRole="teacher">
-                  <Students />
-                </ProtectedRoute>
-              } />
               <Route path="/users" element={
                 <ProtectedRoute requiredRole="admin">
                   <Users />
@@ -100,7 +100,7 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/settings" element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="admin">
                   <div className="p-8 text-center">
                     <h1 className="text-2xl font-bold mb-4">Pengaturan</h1>
                     <p>Fitur ini sedang dalam pengembangan</p>
