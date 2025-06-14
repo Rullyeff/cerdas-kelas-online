@@ -5,7 +5,7 @@ import LoginForm from '@/components/Auth/LoginForm';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'student' | 'teacher' | 'admin';
+  requiredRole?: 'student' | 'teacher' | 'admin' | ('student' | 'teacher' | 'admin')[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
@@ -26,15 +26,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <LoginForm />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Akses Ditolak</h1>
-          <p>Anda tidak memiliki izin untuk mengakses halaman ini.</p>
+  if (requiredRole) {
+    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    if (!allowedRoles.includes(user.role)) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Akses Ditolak</h1>
+            <p>Anda tidak memiliki izin untuk mengakses halaman ini.</p>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 
   return <>{children}</>;
