@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -127,13 +126,17 @@ const Classes = () => {
     setOpenForm(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Updated handleChange to accept both input and select events
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'students' || name === 'assignments'
-        ? parseInt(value) || 0
-        : value,
+      [name]:
+        name === 'students' || name === 'assignments'
+          ? parseInt(value) || 0
+          : value,
     }));
   };
 
