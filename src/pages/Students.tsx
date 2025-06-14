@@ -12,8 +12,8 @@ import { Search, Filter, Plus, Mail, Phone, MoreHorizontal, UserPlus } from 'luc
 
 const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
-
-  const students = [
+  // Simulasi daftar siswa terdaftar oleh admin
+  const availableStudents = [
     {
       id: 1,
       name: 'Ahmad Rizky Pratama',
@@ -60,6 +60,21 @@ const Students = () => {
     }
   ];
 
+  // Simulasi siswa yang SUDAH diasign ke kelas yang diampu guru
+  const [assignedStudents, setAssignedStudents] = useState<number[]>([1,2,3,4]);
+  const [openAssignDialog, setOpenAssignDialog] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState<number | "">(availableStudents.length > 0 ? availableStudents[0].id : "");
+
+  const handleAssignStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedStudentId || assignedStudents.includes(Number(selectedStudentId))) return;
+    setAssignedStudents(prev => [...prev, Number(selectedStudentId)]);
+    setOpenAssignDialog(false);
+    setSelectedStudentId(""); // optional: reset
+  };
+
+  const students = availableStudents.filter(stu => assignedStudents.includes(stu.id));
+
   const getStatusColor = (status: string) => {
     return status === 'active'
       ? 'bg-green-50 text-green-700 border-green-200'
@@ -82,7 +97,7 @@ const Students = () => {
             <h1 className="text-3xl font-bold text-foreground mb-1">Manajemen Siswa</h1>
             <p className="text-muted-foreground">Kelola data siswa dan pantau progress belajar mereka</p>
           </div>
-          <Dialog>
+          <Dialog open={openAssignDialog} onOpenChange={setOpenAssignDialog}>
             <DialogTrigger asChild>
               <Button>
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -91,30 +106,33 @@ const Students = () => {
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Tambah Siswa Baru</DialogTitle>
+                <DialogTitle>Tambah Siswa ke Kelas</DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
+              <form className="space-y-4" onSubmit={handleAssignStudent}>
                 <div>
-                  <Label htmlFor="name">Nama Lengkap</Label>
-                  <Input id="name" placeholder="Masukkan nama lengkap" />
+                  <Label htmlFor="student">Pilih Siswa</Label>
+                  <select
+                    id="student"
+                    value={selectedStudentId}
+                    onChange={e => setSelectedStudentId(Number(e.target.value))}
+                    className="w-full border rounded px-3 py-2 mt-1"
+                  >
+                    <option value="">-- Pilih Siswa Terdaftar --</option>
+                    {availableStudents
+                      .filter(stu => !assignedStudents.includes(stu.id))
+                      .map((stu) => (
+                        <option key={stu.id} value={stu.id}>
+                          {stu.name} ({stu.nis})
+                        </option>
+                      ))}
+                  </select>
                 </div>
-                <div>
-                  <Label htmlFor="nis">NIS</Label>
-                  <Input id="nis" placeholder="Nomor Induk Siswa" />
-                </div>
-                <div>
-                  <Label htmlFor="class">Kelas</Label>
-                  <Input id="class" placeholder="XII IPA 1" />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="email@student.com" />
-                </div>
-                <div>
-                  <Label htmlFor="phone">No. Telepon</Label>
-                  <Input id="phone" placeholder="081234567890" />
-                </div>
-                <Button className="w-full">Tambah Siswa</Button>
+                <Button className="w-full" type="submit" disabled={!selectedStudentId}>
+                  Assign ke Kelas
+                </Button>
+              </form>
+              <div className="text-xs text-gray-500 mt-2">
+                Siswa harus sudah terdaftar oleh admin untuk bisa di-assign ke kelas.
               </div>
             </DialogContent>
           </Dialog>
