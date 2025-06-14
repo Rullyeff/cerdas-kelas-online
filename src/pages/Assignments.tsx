@@ -15,6 +15,9 @@ const Assignments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [openSubmissionDialogId, setOpenSubmissionDialogId] = useState<number | null>(null);
+  const [openEditDialogId, setOpenEditDialogId] = useState<number | null>(null);
+
   const studentAssignments = [
     {
       id: 1,
@@ -94,6 +97,13 @@ const Assignments = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Dummy data pengumpulan siswa untuk demo
+  const dummySubmissions = [
+    { name: 'Ahmad Rizky', submittedAt: '2024-03-14' },
+    { name: 'Siti Nurhaliza', submittedAt: '2024-03-14' },
+    { name: 'Budi Santoso', submittedAt: '2024-03-15' },
+  ];
 
   return (
     <DashboardLayout>
@@ -231,19 +241,63 @@ const Assignments = () => {
                     </>
                   ) : (
                     <>
-                      <Button
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg"
-                        type="button"
-                      >
-                        Lihat Pengumpulan
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="flex-1 border-green-600 text-green-600 font-bold rounded-lg bg-white hover:bg-green-50"
-                        type="button"
-                      >
-                        Edit Tugas
-                      </Button>
+                      {/* Dialog Lihat Pengumpulan */}
+                      <Dialog open={openSubmissionDialogId === assignment.id} onOpenChange={open => setOpenSubmissionDialogId(open ? assignment.id : null)}>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg"
+                            type="button"
+                          >
+                            Lihat Pengumpulan
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Daftar Pengumpulan ({assignment.title})</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-3">
+                            {dummySubmissions.map((s, i) => (
+                              <div key={i} className="flex justify-between border-b pb-2">
+                                <span>{s.name}</span>
+                                <span className="text-sm text-gray-500">{new Date(s.submittedAt).toLocaleDateString('id-ID')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      {/* Dialog Edit Tugas */}
+                      <Dialog open={openEditDialogId === assignment.id} onOpenChange={open => setOpenEditDialogId(open ? assignment.id : null)}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-green-600 text-green-600 font-bold rounded-lg bg-white hover:bg-green-50"
+                            type="button"
+                          >
+                            Edit Tugas
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Edit Tugas ({assignment.title})</DialogTitle>
+                          </DialogHeader>
+                          <form className="space-y-4">
+                            <div>
+                              <Label htmlFor="editTitle">Judul</Label>
+                              <Input id="editTitle" defaultValue={assignment.title} />
+                            </div>
+                            <div>
+                              <Label htmlFor="editPoints">Poin</Label>
+                              <Input id="editPoints" type="number" defaultValue={assignment.points} />
+                            </div>
+                            <div>
+                              <Label htmlFor="editDueDate">Deadline</Label>
+                              <Input id="editDueDate" type="date" defaultValue={assignment.dueDate} />
+                            </div>
+                            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">Simpan</Button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                     </>
                   )}
                 </div>
