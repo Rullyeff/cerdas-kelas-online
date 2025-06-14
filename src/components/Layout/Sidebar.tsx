@@ -2,18 +2,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Home,
-  BookOpen,
-  Users,
-  Calendar,
-  FileText,
-  BarChart3,
-  MessageSquare,
-  Library,
-  Settings,
-  GraduationCap,
-  ClipboardCheck,
-  UserCheck
+  Home, BookOpen, Users, Calendar, FileText, BarChart3, MessageSquare, Library,
+  Settings, GraduationCap, ClipboardCheck, UserCheck
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -64,23 +54,23 @@ const Sidebar = () => {
   const menuItems = getMenuItems();
 
   return (
-    <aside className="bg-white border-r border-gray-200 w-64 min-h-screen">
-      <nav className="p-4">
-        <ul className="space-y-2">
+    <aside className="bg-white border-r border-border w-64 min-h-screen py-6 hidden md:block">
+      <nav className="px-3">
+        <ul className="space-y-1">
           {menuItems.map((item) => (
             <li key={item.path}>
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'text-foreground hover:bg-secondary'
                   }`
                 }
               >
                 <item.icon className="h-5 w-5" />
-                <span className="font-medium">{item.label}</span>
+                <span>{item.label}</span>
               </NavLink>
             </li>
           ))}
