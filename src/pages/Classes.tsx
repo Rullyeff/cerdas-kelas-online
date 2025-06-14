@@ -1,77 +1,166 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Users, Clock, BookOpen, Video } from 'lucide-react';
+import { Users, Clock, BookOpen, Video, Edit, Trash2, Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+
+const defaultClassColors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500'];
+
+const initialTeacherClasses = [
+  {
+    id: 1,
+    name: 'XII IPA 1 - Matematika',
+    students: 32,
+    schedule: 'Senin, Rabu 08:00-09:30',
+    nextSession: 'Besok 08:00',
+    assignments: 3,
+    color: 'bg-blue-500'
+  },
+  {
+    id: 2,
+    name: 'XII IPA 2 - Matematika',
+    students: 30,
+    schedule: 'Selasa, Kamis 10:00-11:30',
+    nextSession: 'Kamis 10:00',
+    assignments: 2,
+    color: 'bg-green-500'
+  },
+  {
+    id: 3,
+    name: 'XI IPA 1 - Matematika',
+    students: 28,
+    schedule: 'Rabu, Jumat 13:00-14:30',
+    nextSession: 'Rabu 13:00',
+    assignments: 5,
+    color: 'bg-purple-500'
+  }
+];
+
+const studentClasses = [
+  {
+    id: 1,
+    name: 'Matematika Lanjut',
+    teacher: 'Dr. Sarah Wijaya',
+    schedule: 'Senin, Rabu 08:00-09:30',
+    students: 32,
+    progress: 75,
+    nextSession: 'Besok 08:00',
+    color: 'bg-blue-500'
+  },
+  {
+    id: 2,
+    name: 'Fisika Kuantum',
+    teacher: 'Prof. Ahmad Rahman',
+    schedule: 'Selasa, Kamis 10:00-11:30',
+    students: 28,
+    progress: 68,
+    nextSession: 'Kamis 10:00',
+    color: 'bg-green-500'
+  },
+  {
+    id: 3,
+    name: 'Kimia Organik',
+    teacher: 'Dr. Maya Sari',
+    schedule: 'Rabu, Jumat 13:00-14:30',
+    students: 30,
+    progress: 82,
+    nextSession: 'Rabu 13:00',
+    color: 'bg-purple-500'
+  }
+];
 
 const Classes = () => {
   const { user } = useAuth();
 
-  const studentClasses = [
-    {
-      id: 1,
-      name: 'Matematika Lanjut',
-      teacher: 'Dr. Sarah Wijaya',
-      schedule: 'Senin, Rabu 08:00-09:30',
-      students: 32,
-      progress: 75,
-      nextSession: 'Besok 08:00',
-      color: 'bg-blue-500'
-    },
-    {
-      id: 2,
-      name: 'Fisika Kuantum',
-      teacher: 'Prof. Ahmad Rahman',
-      schedule: 'Selasa, Kamis 10:00-11:30',
-      students: 28,
-      progress: 68,
-      nextSession: 'Kamis 10:00',
-      color: 'bg-green-500'
-    },
-    {
-      id: 3,
-      name: 'Kimia Organik',
-      teacher: 'Dr. Maya Sari',
-      schedule: 'Rabu, Jumat 13:00-14:30',
-      students: 30,
-      progress: 82,
-      nextSession: 'Rabu 13:00',
-      color: 'bg-purple-500'
-    }
-  ];
+  // Kelola kelas guru dalam state agar bisa tambah/edit/hapus lokal
+  const [teacherClasses, setTeacherClasses] = useState(initialTeacherClasses);
+  const [openForm, setOpenForm] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [formData, setFormData] = useState({
+    id: 0,
+    name: '',
+    students: 0,
+    schedule: '',
+    nextSession: '',
+    assignments: 0,
+    color: defaultClassColors[Math.floor(Math.random() * defaultClassColors.length)],
+  });
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const teacherClasses = [
-    {
-      id: 1,
-      name: 'XII IPA 1 - Matematika',
-      students: 32,
-      schedule: 'Senin, Rabu 08:00-09:30',
-      nextSession: 'Besok 08:00',
-      assignments: 3,
-      color: 'bg-blue-500'
-    },
-    {
-      id: 2,
-      name: 'XII IPA 2 - Matematika',
-      students: 30,
-      schedule: 'Selasa, Kamis 10:00-11:30',
-      nextSession: 'Kamis 10:00',
-      assignments: 2,
-      color: 'bg-green-500'
-    },
-    {
-      id: 3,
-      name: 'XI IPA 1 - Matematika',
-      students: 28,
-      schedule: 'Rabu, Jumat 13:00-14:30',
-      nextSession: 'Rabu 13:00',
-      assignments: 5,
-      color: 'bg-purple-500'
+  const resetForm = () => {
+    setFormData({
+      id: 0,
+      name: '',
+      students: 0,
+      schedule: '',
+      nextSession: '',
+      assignments: 0,
+      color: defaultClassColors[Math.floor(Math.random() * defaultClassColors.length)],
+    });
+  };
+
+  const handleOpenAdd = () => {
+    resetForm();
+    setIsEdit(false);
+    setOpenForm(true);
+  };
+
+  const handleOpenEdit = (kelas: typeof teacherClasses[0]) => {
+    setFormData(kelas);
+    setIsEdit(true);
+    setOpenForm(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'students' || name === 'assignments'
+        ? parseInt(value) || 0
+        : value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEdit) {
+      setTeacherClasses((prev) =>
+        prev.map((kelas) => kelas.id === formData.id ? { ...formData } : kelas)
+      );
+    } else {
+      const newId = Math.max(...teacherClasses.map(k => k.id), 0) + 1;
+      setTeacherClasses((prev) => [
+        ...prev,
+        { ...formData, id: newId },
+      ]);
     }
-  ];
+    setOpenForm(false);
+    resetForm();
+  };
+
+  const handleOpenDelete = (id: number) => setDeleteId(id);
+  const handleCloseDelete = () => setDeleteId(null);
+
+  const handleDelete = () => {
+    setTeacherClasses(prev => prev.filter(kelas => kelas.id !== deleteId));
+    setDeleteId(null);
+  };
 
   const classes = user?.role === 'student' ? studentClasses : teacherClasses;
 
@@ -84,15 +173,15 @@ const Classes = () => {
               {user?.role === 'student' ? 'Kelas Saya' : 'Kelas yang Diajar'}
             </h1>
             <p className="text-gray-600">
-              {user?.role === 'student' 
+              {user?.role === 'student'
                 ? 'Akses semua kelas yang Anda ikuti'
                 : 'Kelola kelas dan siswa Anda'
               }
             </p>
           </div>
           {user?.role === 'teacher' && (
-            <Button>
-              <BookOpen className="h-4 w-4 mr-2" />
+            <Button onClick={handleOpenAdd}>
+              <Plus className="h-4 w-4 mr-2" />
               Buat Kelas Baru
             </Button>
           )}
@@ -100,7 +189,7 @@ const Classes = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {classes.map((classItem) => (
-            <Card key={classItem.id} className="hover:shadow-lg transition-shadow">
+            <Card key={classItem.id} className="hover:shadow-lg transition-shadow relative">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className={`w-4 h-4 rounded-full ${classItem.color}`}></div>
@@ -111,10 +200,10 @@ const Classes = () => {
                 </div>
                 <CardTitle className="text-lg">{classItem.name}</CardTitle>
                 {user?.role === 'student' && (
-                  <p className="text-sm text-gray-600">{classItem.teacher}</p>
+                  <p className="text-sm text-gray-600">{(classItem as any).teacher}</p>
                 )}
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-0">
                 <div className="space-y-2">
                   <div className="flex items-center text-sm text-gray-600">
                     <Clock className="h-4 w-4 mr-2" />
@@ -129,12 +218,12 @@ const Classes = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
-                      <span>{classItem.progress}%</span>
+                      <span>{(classItem as any).progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${classItem.progress}%` }}
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{ width: `${(classItem as any).progress}%` }}
                       ></div>
                     </div>
                   </div>
@@ -146,7 +235,7 @@ const Classes = () => {
                   </div>
                 )}
 
-                <div className="flex space-x-2">
+                <div className={`flex space-x-2 ${user?.role === 'teacher' ? 'justify-between' : ''}`}>
                   <Button className="flex-1">
                     <Video className="h-4 w-4 mr-2" />
                     Gabung Kelas
@@ -154,6 +243,16 @@ const Classes = () => {
                   <Button variant="outline" size="icon">
                     <BookOpen className="h-4 w-4" />
                   </Button>
+                  {user?.role === 'teacher' && (
+                    <div className="flex items-center space-x-1">
+                      <Button variant="outline" size="icon" onClick={() => handleOpenEdit(classItem)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleOpenDelete(classItem.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -178,6 +277,114 @@ const Classes = () => {
             </div>
           </div>
         )}
+
+        {/* Dialog Tambah/Edit */}
+        <Dialog open={openForm} onOpenChange={setOpenForm}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{isEdit ? "Edit Kelas" : "Tambah Kelas Baru"}</DialogTitle>
+            </DialogHeader>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <Label htmlFor="name">Nama Kelas</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Misal: XII IPA 4 - Matematika"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="students">Jumlah Siswa</Label>
+                <Input
+                  id="students"
+                  name="students"
+                  type="number"
+                  value={formData.students}
+                  onChange={handleChange}
+                  placeholder="Contoh: 35"
+                  min={0}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="schedule">Jadwal</Label>
+                <Input
+                  id="schedule"
+                  name="schedule"
+                  value={formData.schedule}
+                  onChange={handleChange}
+                  placeholder="Misal: Senin, Rabu 08:00-09:30"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="nextSession">Sesi Berikutnya</Label>
+                <Input
+                  id="nextSession"
+                  name="nextSession"
+                  value={formData.nextSession}
+                  onChange={handleChange}
+                  placeholder="Misal: Selasa 10:00"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="assignments">Jumlah Tugas Aktif</Label>
+                <Input
+                  id="assignments"
+                  name="assignments"
+                  type="number"
+                  value={formData.assignments}
+                  onChange={handleChange}
+                  placeholder="Contoh: 4"
+                  min={0}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="color">Warna Kelas</Label>
+                <select
+                  id="color"
+                  name="color"
+                  value={formData.color}
+                  onChange={handleChange}
+                  className="w-full h-10 p-2 rounded-md border"
+                >
+                  {defaultClassColors.map(c => (
+                    <option key={c} value={c}>{c.replace('bg-', '').replace('-500', '').toUpperCase()}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" type="button" onClick={() => setOpenForm(false)}>
+                  Batal
+                </Button>
+                <Button type="submit">
+                  {isEdit ? "Simpan" : "Tambah"}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog Hapus */}
+        <AlertDialog open={deleteId !== null} onOpenChange={handleCloseDelete}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Hapus Kelas?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </DashboardLayout>
   );
