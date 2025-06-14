@@ -46,7 +46,12 @@ const QuestionBank = () => {
 
   return (
     <div className="space-y-6">
-      <QuestionBankHeader onExport={exportQuestions} />
+      <QuestionBankHeader
+        onExport={exportQuestions}
+        subjectList={subjects}
+        selectedSubject={selectedSubject === 'all' ? '' : selectedSubject}
+        onSubjectChange={val => setSelectedSubject(val)}
+      />
       <QuestionSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <Tabs value={selectedSubject} onValueChange={setSelectedSubject} className="w-full">
         <TabsList className="mb-4 flex flex-wrap gap-2">
@@ -62,6 +67,4 @@ const QuestionBank = () => {
     </div>
   );
 };
-
 export default QuestionBank;
-
