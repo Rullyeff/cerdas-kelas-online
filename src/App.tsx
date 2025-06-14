@@ -61,12 +61,12 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/grades" element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="student">
                   <Grades />
                 </ProtectedRoute>
               } />
               <Route path="/grading" element={
-                <ProtectedRoute requiredRole="teacher">
+                <ProtectedRoute requiredRole={['teacher', 'admin']}>
                   <Grades />
                 </ProtectedRoute>
               } />
@@ -103,6 +103,11 @@ const App = () => (
               <Route path="/settings" element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              } />
+              <Route path="/attendance" element={
+                <ProtectedRoute requiredRole={['teacher', 'admin']}>
+                  <Schedule />
                 </ProtectedRoute>
               } />
               <Route path="*" element={<NotFound />} />

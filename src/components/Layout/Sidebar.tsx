@@ -2,9 +2,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Home, MessageSquare, Library, BookOpen, Users, FileText, 
-  ClipboardCheck, BarChart3, Calendar, UserCheck, Settings, 
-  GraduationCap
+  Home, BookOpen, FileText, BarChart3, Calendar, MessageSquare,
+  Users, Settings, ClipboardCheck, Library, GraduationCap, 
+  FolderOpen, Award, Bell
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -13,45 +13,48 @@ const Sidebar = () => {
 
   const getMenuItems = () => {
     const commonItems = [
-      { icon: Home, label: 'Dashboard', path: '/dashboard' },
-      { icon: MessageSquare, label: 'Pesan', path: '/messages' },
-      { icon: Library, label: 'Perpustakaan', path: '/library' },
+      { icon: Home, label: 'Home', path: '/dashboard' },
+      { icon: BookOpen, label: 'Courses', path: '/classes' },
     ];
 
     switch (user?.role) {
       case 'student':
         return [
           ...commonItems,
-          { icon: BookOpen, label: 'Kelas Saya', path: '/classes' },
-          { icon: FileText, label: 'Tugas', path: '/assignments' },
-          { icon: ClipboardCheck, label: 'Ujian', path: '/exams' },
-          { icon: BarChart3, label: 'Nilai Saya', path: '/grades' },
-          { icon: Calendar, label: 'Jadwal', path: '/schedule' },
-          { icon: Settings, label: 'Pengaturan', path: '/settings' },
+          { icon: FileText, label: 'Assignments', path: '/assignments' },
+          { icon: ClipboardCheck, label: 'Tests & Quizzes', path: '/exams' },
+          { icon: BarChart3, label: 'Grades', path: '/grades' },
+          { icon: Calendar, label: 'Calendar', path: '/schedule' },
+          { icon: MessageSquare, label: 'Messages', path: '/messages' },
+          { icon: Library, label: 'Resources', path: '/library' },
+          { icon: Settings, label: 'Account', path: '/settings' },
         ];
       case 'teacher':
         return [
           ...commonItems,
-          { icon: BookOpen, label: 'Kelas Saya', path: '/classes' },
-          { icon: Users, label: 'Siswa', path: '/students' },
-          { icon: FileText, label: 'Tugas', path: '/assignments' },
-          { icon: ClipboardCheck, label: 'Ujian', path: '/exams' },
-          { icon: BarChart3, label: 'Penilaian', path: '/grading' },
-          { icon: Calendar, label: 'Jadwal', path: '/schedule' },
-          { icon: Settings, label: 'Pengaturan', path: '/settings' },
+          { icon: FileText, label: 'Assignments', path: '/assignments' },
+          { icon: ClipboardCheck, label: 'Tests & Quizzes', path: '/exams' },
+          { icon: BarChart3, label: 'Gradebook', path: '/grading' },
+          { icon: Users, label: 'People', path: '/students' },
+          { icon: Calendar, label: 'Calendar', path: '/schedule' },
+          { icon: MessageSquare, label: 'Messages', path: '/messages' },
+          { icon: Library, label: 'Resources', path: '/library' },
+          { icon: Award, label: 'Attendance', path: '/attendance' },
+          { icon: Settings, label: 'Account', path: '/settings' },
         ];
       case 'admin':
         return [
           ...commonItems,
-          { icon: BookOpen, label: 'Kelola Kelas', path: '/classes' },
-          { icon: Users, label: 'Kelola Siswa', path: '/students' },
-          { icon: UserCheck, label: 'Kelola Guru', path: '/teachers' },
-          { icon: FileText, label: 'Kelola Tugas', path: '/assignments' },
-          { icon: ClipboardCheck, label: 'Kelola Ujian', path: '/exams' },
-          { icon: BarChart3, label: 'Laporan', path: '/reports' },
-          { icon: Calendar, label: 'Jadwal', path: '/schedule' },
-          { icon: GraduationCap, label: 'Pengguna', path: '/users' },
-          { icon: Settings, label: 'Pengaturan', path: '/settings' },
+          { icon: FileText, label: 'Assignments', path: '/assignments' },
+          { icon: ClipboardCheck, label: 'Tests & Quizzes', path: '/exams' },
+          { icon: BarChart3, label: 'Reports', path: '/reports' },
+          { icon: Users, label: 'Students', path: '/students' },
+          { icon: GraduationCap, label: 'Teachers', path: '/teachers' },
+          { icon: FolderOpen, label: 'User Management', path: '/users' },
+          { icon: Calendar, label: 'Calendar', path: '/schedule' },
+          { icon: MessageSquare, label: 'Messages', path: '/messages' },
+          { icon: Library, label: 'Resources', path: '/library' },
+          { icon: Settings, label: 'System Settings', path: '/settings' },
         ];
       default:
         return commonItems;
@@ -61,7 +64,12 @@ const Sidebar = () => {
   const menuItems = getMenuItems();
 
   return (
-    <aside className="bg-white border-r border-gray-200 w-64 min-h-screen py-6 hidden md:block">
+    <aside className="bg-white border-r border-gray-200 w-64 min-h-screen py-4 hidden md:block">
+      <div className="px-4 mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Edukasi Anak Bangsa</h2>
+        <p className="text-sm text-gray-600 mt-1">Learning Management System</p>
+      </div>
+      
       <nav className="px-3">
         <ul className="space-y-1">
           {menuItems.map((item) => (
@@ -69,10 +77,10 @@ const Sidebar = () => {
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
+                  `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-green-600 text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
                   }`
                 }
               >
@@ -83,6 +91,20 @@ const Sidebar = () => {
           ))}
         </ul>
       </nav>
+
+      <div className="mt-8 px-4">
+        <div className="bg-gray-50 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Bell className="h-4 w-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">Quick Access</span>
+          </div>
+          <div className="space-y-1">
+            <a href="/assignments" className="block text-xs text-gray-600 hover:text-blue-600">Recent Assignments</a>
+            <a href="/grades" className="block text-xs text-gray-600 hover:text-blue-600">Grade Center</a>
+            <a href="/calendar" className="block text-xs text-gray-600 hover:text-blue-600">Upcoming Events</a>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 };
