@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -77,17 +76,31 @@ const StudentDashboard = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {upcomingClasses.map((class_, index) => (
-              <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm font-medium text-blue-600 w-12">{class_.time}</div>
-                <div className="flex-1">
-                  <div className="font-medium text-sm">{class_.subject}</div>
-                  <div className="text-xs text-gray-500">{class_.teacher}</div>
-                  <div className="text-xs text-gray-400">{class_.room}</div>
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg border hover:shadow-sm transition"
+              >
+                <div className="flex items-center mb-1 sm:mb-0">
+                  <span className="bg-primary/10 text-primary font-bold px-3 py-2 rounded-lg flex items-center gap-2 text-base min-w-[70px] justify-center">
+                    <Clock className="h-4 w-4 mr-1" />
+                    {class_.time}
+                  </span>
                 </div>
-                <Button size="sm" variant="outline">
-                  <PlayCircle className="h-4 w-4 mr-1" />
-                  Gabung
-                </Button>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-base truncate">{class_.subject}</div>
+                  <div className="text-xs text-gray-500 truncate">{class_.teacher}</div>
+                  <div className="text-xs text-gray-400 truncate">{class_.room}</div>
+                </div>
+                <div className="flex w-full sm:w-auto mt-2 sm:mt-0">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full sm:w-auto flex items-center gap-1 border-primary text-primary hover:bg-primary/10"
+                  >
+                    <PlayCircle className="h-4 w-4 mr-1" />
+                    Gabung
+                  </Button>
+                </div>
               </div>
             ))}
           </CardContent>
