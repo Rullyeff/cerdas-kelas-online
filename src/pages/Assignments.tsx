@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -232,8 +231,19 @@ const Assignments = () => {
                     </>
                   ) : (
                     <>
-                      <Button>Lihat Pengumpulan</Button>
-                      <Button variant="outline">Edit Tugas</Button>
+                      <Button
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg"
+                        type="button"
+                      >
+                        Lihat Pengumpulan
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex-1 border-green-600 text-green-600 font-bold rounded-lg bg-white hover:bg-green-50"
+                        type="button"
+                      >
+                        Edit Tugas
+                      </Button>
                     </>
                   )}
                 </div>
